@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Purchase Orders</title>
+</head>
+<body>
+
+  <h2>Purchase Orders</h2>
+
+  <!-- proveedor -->
+  <input type="text" id="supplier" placeholder="Supplier (BIOXX)">
+
+  <hr>
+
+  <h3>Add Items</h3>
+
+  <input type="text" id="product" placeholder="Product name">
+  <input type="number" id="quantity" placeholder="Quantity">
+  <input type="number" id="cost" placeholder="Cost">
+
+  <button onclick="addItem()">Add Item</button>
+
+  <ul id="itemsList"></ul>
+
+  <hr>
+
+  <button onclick="saveOrderDraft()">Save Draft</button>
+  <button onclick="confirmOrder()">Confirm Order</button>
+
+  <hr>
+
+  <h3>Orders List</h3>
+  <ul id="ordersList"></ul>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+  <script src="../js/firebase.js"></script>
+  <script src="../js/orders.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inventory</title>
+</head>
+<body>
+
+  <h2>Inventory - Prem Vida</h2>
+  <input type="text" id="name" placeholder="Product Name">
+  <input type="text" id="code" placeholder="Code (BIOXX-01)">
+  <input type="text" id="company" placeholder="Company">
+  <input type="number" id="stock" placeholder="Stock">
+  <input type="number" id="costPrice" placeholder="Cost Price">
+
+  
+  <!-- tipo de precio -->
+  <select id="pricingType" onchange="togglePricing()">
+    <option value="manual">Manual Price</option>
+    <option value="formula">By Margin (%)</option>
+  </select>
+
+  <!-- precio manual -->
+  <div id="manualDiv">
+    <input type="number" id="salePrice" placeholder="Sale Price">
+  </div>
+
+  <!-- margen -->
+  <div id="formulaDiv" style="display:none;">
+    <input type="number" id="profitMargin" placeholder="Profit Margin %">
+  </div>
+
+  <button onclick="addProduct()">Add Product</button>
+
+  <hr>
+
+  <h3>Product List</h3>
+  <ul id="productList"></ul>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+  <script src="../js/firebase.js"></script>
+  <script src="../js/products.js"></script>
+
+</body>
+</html>

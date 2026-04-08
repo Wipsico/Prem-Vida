@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <h2>Dashboard</h2>
+
+  <!-- 🔥 FILTRO -->
+  <h3>Filter</h3>
+  <input type="date" id="startDate">
+  <input type="date" id="endDate">
+  <button onclick="loadAll()">Apply</button>
+
+  <hr>
+
+  <!-- 🔥 RESUMEN -->
+  <h3>Summary</h3>
+  <p id="sales">Sales: 0</p>
+  <p id="expenses">Expenses: 0</p>
+  <p id="profit">Profit: 0</p>
+
+  <hr>
+
+  <!-- 🔥 GRÁFICO -->
+  <h3>Sales vs Expenses</h3>
+  <canvas id="chart" width="400" height="200"></canvas>
+
+  <hr>
+
+  <!-- 🔥 TOP PRODUCTOS -->
+  <h3>Top Products</h3>
+  <ul id="topProducts"></ul>
+
+  <hr>
+
+  <!-- 🔥 ALERTAS -->
+  <h3>Alerts</h3>
+  <ul id="alerts"></ul>
+
+  <hr>
+
+  <!-- 🔥 HISTORIAL -->
+  <h3>History</h3>
+  <ul id="history"></ul>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+  <script src="js/firebase.js"></script>
+  <script src="js/dashboard.js"></script>
+
+</body>
+</html>
