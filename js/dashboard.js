@@ -1,4 +1,6 @@
 let chart;
+let productList = [];
+let selectedProductId = null;
 
 function getRange() {
 
@@ -48,12 +50,12 @@ function loadSummaryAndChart() {
 
       });
 
-      // 🔹 texto
-      document.getElementById("sales").innerText = "Sales: " + sales;
-      document.getElementById("expenses").innerText = "Expenses: " + expenses;
-      document.getElementById("profit").innerText = "Profit: " + (sales - expenses);
+      // texto
+      document.getElementById("sales").innerText = "Bs " + sales.toLocaleString('es-BO', {minimumFractionDigits: 2});
+      document.getElementById("expenses").innerText = "Bs " + expenses.toLocaleString('es-BO', {minimumFractionDigits: 2});
+      document.getElementById("profit").innerText = "Bs " + (sales - expenses).toLocaleString('es-BO', {minimumFractionDigits: 2});
 
-      // 🔥 gráfico
+      // gráfico
       renderChart(sales, expenses);
 
     });

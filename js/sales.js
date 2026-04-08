@@ -49,7 +49,7 @@ async function saveDraft() {
 
   console.log("Click Draft");
 
-  const productId = document.getElementById("productSelect").value;
+  const productId = selectedProductId;
   const quantity = parseInt(document.getElementById("quantity").value);
 
   if (!productId) {
@@ -113,7 +113,7 @@ async function saveDraft() {
 // Confirmar Venta 
 function confirmSale() {
 
-  const productId = document.getElementById("productSelect").value;
+  const productId = selectedProductId;
   const quantity = parseInt(document.getElementById("quantity").value);
 
   if (!productId) {
@@ -190,7 +190,7 @@ function searchProducts() {
    });
   }
 function loadProductsForSearch(){
-  firebase.firestore().collection("products").gete()
+  firebase.firestore().collection("products").get()
   .then((snapshot) => {
     allProducts = [];
 
@@ -198,6 +198,62 @@ function loadProductsForSearch(){
       allProducts.push({ id: doc.id, ...doc.data() });
     });
   });
+}
+function loadProducts() {
+  firebase.firestore().collection("products").get()
+    .then((snapshot) => {
+
+      productsList = [];
+
+      snapshot.forEach((doc) => {
+        const p = doc.data();
+
+        productsList.push({
+          id: doc.id,
+          name: p.name,
+          stock: p.stock,
+          price: p.salePrice
+        });
+      });
+    });
+}
+function searchProducts() {
+  const input = document.getElementById("searchProduct").value.toLowerCase();
+  const suggestions = document.getElementById("suggestions");
+
+  suggestions.innerHTML = "";
+
+  if (!input) return;
+
+  const filtered = productsList.filter(p =>
+    p.name.toLowerCase().includes(input)
+  );
+
+  filtered.forEach(p => {
+    const div = document.createElement("div");
+
+    div.className = "p-2 hover:bg-gray-200 cursor-pointer";
+    div.innerHTML = `
+      <strong>${p.name}</strong><br>
+      <small>Stock: ${p.stock} | Bs ${p.price}</small>
+    `;
+
+    div.onclick = () => selectProduct(p);
+
+    suggestions.appendChild(div);
+  });
+}
+function selectProduct(product) {
+
+  selectedProductId = product.id;
+
+  document.getElementById("searchProduct").value = product.name;
+
+  document.getElementById("suggestions").innerHTML = "";
+
+  // sincronizamos con select oculto
+  const select = document.getElementById("productSelect");
+  select.innerHTML = `<option value="${product.id}">${product.name}</option>`;
 }
 
 // Iniciador
