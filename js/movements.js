@@ -1,96 +1,80 @@
+if (typeof window.db === 'undefined') {
+    window.db = firebase.firestore();
+}
+
 function getProductById(productId) {
-  return firebase.firestore()
-    .collection("products")
-    .doc(productId)
-    .get();
+    return db.collection("products").doc(productId).get();
 }
 
 function updateStock(productId, newStock) {
-  return firebase.firestore()
-    .collection("products")
-    .doc(productId)
-    .update({
-      stock: newStock
+    return db.collection("products").doc(productId).update({
+        stock: newStock
     });
 }
 
 function saveMovement(data) {
-  return firebase.firestore()
-    .collection("movements")
-    .add(data)
-    .catch((error) => {
-
-      firebase.firestore().collection("logs").add({
-        message: error.message,
-        date: new Date()
-      });
-
-      alert("Error saving movement");
-      throw error;
-    });
+    return db.collection("movements").add(data)
+        .catch((error) => {
+            db.collection("logs").add({
+                message: error.message,
+                date: new Date()
+            });
+            alert("Error al guardar el movimiento");
+            throw error;
+        });
 }
 
 function getDraftById(draftId) {
-  return firebase.firestore()
-    .collection("movements")
-    .doc(draftId)
-    .get();
+    return db.collection("movements").doc(draftId).get();
 }
 
 function updateDraft(draftId, data) {
-  return firebase.firestore()
-    .collection("movements")
-    .doc(draftId)
-    .update(data);
+    return db.collection("movements").doc(draftId).update(data);
 }
 
 function getDrafts() {
-  return firebase.firestore()
-    .collection("movements")
-    .where("status", "==", "draft")
-    .get();
+    return db.collection("movements").where("status", "==", "draft").get();
 }
 
 function confirmDraft(draftId) {
+    getDraftById(draftId).then(async (doc) => {
+        const d = doc.data();
 
-  getDraftById(draftId).then(async (doc) => {
+        if (!d) {
+            alert("Borrador no encontrado");
+            return;
+        }
 
-    const d = doc.data();
+        if (d.status === "confirmed") {
+            alert("Este borrador ya fue confirmado");
+            return;
+        }
 
-    if (!d) {
-      alert("Draft not found");
-      return;
-    }
+        const productDoc = await getProductById(d.productId);
+        const product = productDoc.data();
 
-    if (d.status === "confirmed") {
-      alert("This draft is already confirmed");
-      return;
-    }
+        if (!product) {
+            alert("Producto no encontrado");
+            return;
+        }
 
-    const productDoc = await getProductById(d.productId);
-    const product = productDoc.data();
+        if (product.stock < d.quantity) {
+            alert("Stock insuficiente");
+            return;
+        }
 
-    if (!product) {
-      alert("Product not found");
-      return;
-    }
+        const newStock = product.stock - d.quantity;
 
-    if (product.stock < d.quantity) {
-      alert("Not enough stock");
-      return;
-    }
+        await updateStock(d.productId, newStock);
 
-    const newStock = product.stock - d.quantity;
+        await updateDraft(draftId, {
+            status: "confirmed",
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
 
-    await updateStock(d.productId, newStock);
+        alert("Borrador confirmado con éxito");
 
-    await updateDraft(draftId, {
-      status: "confirmed",
-      createdAt: new Date()
+        if (typeof loadDrafts === 'function') loadDrafts();
+        if (typeof loadExpenses === 'function') loadExpenses();
     });
-
-    alert("Draft confirmed successfully");
-
-    loadDrafts();
-  });
 }
